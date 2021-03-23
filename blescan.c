@@ -76,8 +76,8 @@ int blescan(int id_type, char *id, int timeout, char *dev_addr){
 	char name[30], addr[18];
 	unsigned char hci_read_buf[HCI_MAX_EVENT_SIZE], *hci_ptr;
 
-  dev_id = hci_get_route(NULL);  // 找到默认蓝牙设备的编号
-  sock = hci_open_dev(dev_id);  // 打开与ble的sock
+  dev_id = hci_get_route(NULL);  // open the default bluetooth device
+  sock = hci_open_dev(dev_id);  // open hci sock
   if (dev_id < 0 || sock < 0){
 		perror("device not find");
 		goto done;
@@ -92,7 +92,7 @@ int blescan(int id_type, char *id, int timeout, char *dev_addr){
 		perror("le scan enable error");
 		goto done;
   }
-  // 设置事件过滤器
+  // set event filter
   filter_size = sizeof(current_filter);
   hci_filter_clear(&current_filter);
   hci_filter_set_ptype(HCI_EVENT_PKT, &current_filter);
@@ -109,7 +109,7 @@ int blescan(int id_type, char *id, int timeout, char *dev_addr){
 	sa.sa_handler = sigint_handler;
 	sigaction(SIGINT, &sa, NULL);
 	int len = 0;
-	// 对HCI sock进行读取
+	// read from hci socket
 	while (timeout > 0){
 		evt_le_meta_event *meta;
 		le_advertising_info *info;
